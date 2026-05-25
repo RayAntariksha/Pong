@@ -14,12 +14,13 @@ struct GroundDimension {
     width: i32,
     height: i32,
 }
-fn draw_ground(lines_vec: Vec<String>) {
+fn draw_ground(lines_vec: Vec<String>, score: i32) {
     print!("┌──────────────────────────────────────────────────┐\n\r");
     for line in lines_vec {
         print!("│{}│\n\r", line);
     }
     print!("└──────────────────────────────────────────────────┘\n\r");
+    print!("    Score: {score}\n\r");
     print!("    'q' <Quit>     ↑ <Up>      ↓ <Down>\n\r");
     print!("    Made By : RayAntariksha     Year: 2026         \n\r");
 }
@@ -123,6 +124,7 @@ fn run() -> io::Result<()> {
         width: 50,
         height: 10,
     };
+    let mut score: i32 = 0;
     let mut lines_vec: Vec<String> = Vec::new();
     for _ in 0..dimensions.height {
         lines_vec.push(counted_chars(' ', dimensions.width));
@@ -200,19 +202,21 @@ fn run() -> io::Result<()> {
             && ball_position.y <= platform_position + 3
         {
             ballvelocity.direction -= 2;
+            score += 1;
         } else if ball_position.x == 1
             && ballvelocity.direction > 7
             && ball_position.y >= platform_position
             && ball_position.y <= platform_position + 2
         {
             ballvelocity.direction -= 6;
+            score += 1;
         }
-        print!("\x1b[14F\x1b[J");
+        print!("\x1b[15F\x1b[J");
         render_platform(platform_position, &mut lines_vec);
         if ballvelocity.direction < 6 {
             render_bot_platform(&mut bot_postion, ball_position.clone(), &mut lines_vec);
         }
-        draw_ground(lines_vec.clone());
+        draw_ground(lines_vec.clone(), score);
         move_ball_position(&mut ball_position, &ballvelocity, &mut lines_vec);
         std::thread::sleep(Duration::from_millis(100));
     }
