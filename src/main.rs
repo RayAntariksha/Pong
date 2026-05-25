@@ -218,7 +218,8 @@ fn run() -> io::Result<()> {
         }
         draw_ground(lines_vec.clone(), score);
         move_ball_position(&mut ball_position, &ballvelocity, &mut lines_vec);
-        std::thread::sleep(Duration::from_millis(100));
+
+        std::thread::sleep(Duration::from_millis(70));
     }
     return Ok(());
 }
